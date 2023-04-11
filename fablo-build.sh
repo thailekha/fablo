@@ -24,5 +24,5 @@ docker build \
   --build-arg VERSION_DETAILS="$VERSION_DETAILS" \
   --tag "$IMAGE_BASE_NAME" "$FABLO_HOME"
 
-docker tag "$IMAGE_BASE_NAME" "softwaremill/fablo:$FABLO_VERSION"
+docker tag "$IMAGE_BASE_NAME" "thailekha/fablo:$FABLO_VERSION"
 
