@@ -6,7 +6,8 @@ networks:
 services:
 <% orgs.forEach(function(org){ %>
   <%= org.ca.address %>:
-    container_name: <%= org.ca.address %>
+    deploy:
+      replicas: 1
     image: hyperledger/fabric-ca:${FABRIC_CA_VERSION}
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
@@ -35,7 +36,8 @@ services:
 
   <%_ if (org.ca.db === "postgres") { _%>
   db.<%= org.ca.address %>:
-    container_name: db.<%= org.ca.address %>
+    deploy:
+      replicas: 1
     image: postgres:${FABRIC_CA_POSTGRES_VERSION}
     environment:
       - POSTGRES_PASSWORD=caDbPass12345
@@ -53,7 +55,8 @@ services:
   <%_ } _%>
 
   <%= org.cli.address %>:
-    container_name: <%= org.cli.address %>
+    deploy:
+      replicas: 1
     image: hyperledger/fabric-tools:${FABRIC_VERSION}
     tty: true
     environment:
@@ -105,7 +108,8 @@ services:
 
   <%_ if (org.tools.fabloRest) { _%>
   <%= org.tools.fabloRest.address %>:
-    container_name: <%= org.tools.fabloRest.address %>
+    deploy:
+      replicas: 1
     image: softwaremill/fablo-rest:${FABLO_REST_VERSION}
     environment:
       - PORT=8000
@@ -132,8 +136,9 @@ services:
 
   <%_ if (org.tools.explorer && !global.tools.explorer) { _%>
   db.<%= org.tools.explorer.address %>:
+    deploy:
+      replicas: 1
     image: hyperledger/explorer-db:${HYPERLEDGER_EXPLORER_VERSION}
-    container_name: db.<%= org.tools.explorer.address %>
     environment:
       - DATABASE_DATABASE=fabricexplorer
       - DATABASE_USERNAME=hppoc
@@ -149,9 +154,12 @@ services:
       - basic
 
   <%= org.tools.explorer.address %>:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 8
     image: hyperledger/explorer:${HYPERLEDGER_EXPLORER_VERSION}
-    restart: on-failure:8
-    container_name: <%= org.tools.explorer.address %>
     environment:
       - DATABASE_HOST=db.<%= org.tools.explorer.address %>
       - DATABASE_DATABASE=fabricexplorer
@@ -178,7 +186,8 @@ services:
   <%_ org.ordererGroups.forEach(function(ordererGroup){ _%>
   <%_ ordererGroup.orderers.forEach(function(orderer){ _%>
   <%= orderer.address %>:
-    container_name: <%= orderer.address %>
+    deploy:
+      replicas: 1
     image: hyperledger/fabric-orderer:${FABRIC_VERSION}
     environment:
       - FABRIC_LOGGING_SPEC=${LOGGING_LEVEL}
@@ -223,7 +232,8 @@ services:
 
   <%_ org.peers.forEach(function(peer){ _%>
   <%= peer.address %>:
-    container_name: <%= peer.address %>
+    deploy:
+      replicas: 1
     image: hyperledger/fabric-peer:${FABRIC_VERSION}
     environment:
       - CORE_PEER_LOCALMSPID=<%= org.mspName %>
@@ -280,7 +290,8 @@ services:
 
   <%_ if(peer.db.type==="CouchDb") { _%>
   couchdb.<%= peer.name %>.<%= org.domain %>:
-    container_name: couchdb.<%= peer.name %>.<%= org.domain %>
+    deploy:
+      replicas: 1
     image: <%= peer.db.image %>
     environment:
       - COUCHDB_USER=<%= peer.name %>
@@ -295,8 +306,9 @@ services:
 
   <%_ if (global.tools.explorer) { _%>
   db.<%= global.tools.explorer.address %>:
+    deploy:
+      replicas: 1
     image: hyperledger/explorer-db:${HYPERLEDGER_EXPLORER_VERSION}
-    container_name: db.<%= global.tools.explorer.address %>
     environment:
       - DATABASE_DATABASE=fabricexplorer
       - DATABASE_USERNAME=hppoc
@@ -312,9 +324,12 @@ services:
       - basic
 
   <%= global.tools.explorer.address %>:
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 8
     image: hyperledger/explorer:${HYPERLEDGER_EXPLORER_VERSION}
-    restart: on-failure:8
-    container_name: <%= global.tools.explorer.address %>
     environment:
       - DATABASE_HOST=db.<%= global.tools.explorer.address %>
       - DATABASE_DATABASE=fabricexplorer
