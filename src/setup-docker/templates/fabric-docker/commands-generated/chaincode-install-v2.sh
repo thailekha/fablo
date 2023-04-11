@@ -7,13 +7,19 @@
    - chaincode
    - global
 */-%>
+
 printHeadline "Packaging chaincode '<%= chaincode.name %>'" "U1F60E"
+
+cli_container_id=$(get_container_id <%= chaincode.instantiatingOrg.cli.address %>)
+
 chaincodeBuild <% -%>
   "<%= chaincode.name %>" <% -%>
   "<%= chaincode.lang %>" <% -%>
   "$CHAINCODES_BASE_DIR/<%= chaincode.directory %>"
 chaincodePackage <% -%>
-  "<%= chaincode.instantiatingOrg.cli.address %>" <% -%>
+  # "<%= chaincode.channel.composeNetworkName %>_<%= chaincode.instantiatingOrg.cli.address %>" <% -%>
+  # "<%= chaincode.channel.composeNetworkName %>_<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
+  "${cli_container_id}" <% -%>
   "<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
   "<%= chaincode.name %>" <% -%>
   "$version" <% -%>

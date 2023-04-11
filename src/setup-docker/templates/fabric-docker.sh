@@ -4,6 +4,7 @@ set -eu
 
 FABLO_NETWORK_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
+source "$FABLO_NETWORK_ROOT/fabric-docker/mod.sh"
 source "$FABLO_NETWORK_ROOT/fabric-docker/scripts/base-help.sh"
 source "$FABLO_NETWORK_ROOT/fabric-docker/scripts/base-functions.sh"
 source "$FABLO_NETWORK_ROOT/fabric-docker/scripts/chaincode-functions.sh"
