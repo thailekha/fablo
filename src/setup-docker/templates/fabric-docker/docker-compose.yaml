@@ -1,8 +1,5 @@
 version: '2.2'
 
-networks:
-  basic:
-
 services:
 <% orgs.forEach(function(org){ %>
   <%= org.ca.address %>:
@@ -31,8 +28,6 @@ services:
       db.<%= org.ca.address %>:
         condition: service_healthy
     <%_ } _%>
-    networks:
-      - basic
 
   <%_ if (org.ca.db === "postgres") { _%>
   db.<%= org.ca.address %>:
@@ -50,8 +45,6 @@ services:
       retries: 7
     volumes:
       - /var/lib/postgresql/data
-    networks:
-      - basic
   <%_ } _%>
 
   <%= org.cli.address %>:
@@ -103,8 +96,6 @@ services:
       - "../fabric-config/<%= chaincode.privateDataConfigFile %>:/var/hyperledger/cli/<%= chaincode.privateDataConfigFile %>"
       <%_ } _%>
       <%_ }) _%>
-    networks:
-      - basic
 
   <%_ if (org.tools.fabloRest) { _%>
   <%= org.tools.fabloRest.address %>:
@@ -130,8 +121,6 @@ services:
     <%_ } _%>
     ports:
       - <%= org.tools.fabloRest.port %>:8000
-    networks:
-      - basic
   <%_ } _%>
 
   <%_ if (org.tools.explorer && !global.tools.explorer) { _%>
@@ -150,8 +139,6 @@ services:
       retries: 7
     volumes:
       - /var/lib/postgresql/data
-    networks:
-      - basic
 
   <%= org.tools.explorer.address %>:
     deploy:
@@ -179,8 +166,6 @@ services:
     depends_on:
       db.<%= org.tools.explorer.address %>:
         condition: service_healthy
-    networks:
-      - basic
   <%_ } _%>
 
   <%_ org.ordererGroups.forEach(function(ordererGroup){ _%>
@@ -224,8 +209,6 @@ services:
       - ../fabric-config/config/:/var/hyperledger/config
       - ../fabric-config/crypto-config/peerOrganizations/<%= orderer.domain %>/peers/<%= orderer.address %>/msp/:/var/hyperledger/orderer/msp
       - ../fabric-config/crypto-config/peerOrganizations/<%= orderer.domain %>/peers/<%= orderer.address %>/tls/:/var/hyperledger/orderer/tls
-    networks:
-      - basic
 
   <%_ }) _%>
   <%_ }) _%>
@@ -285,8 +268,6 @@ services:
       - ../fabric-config/crypto-config/peerOrganizations/<%= org.domain %>/peers/<%= peer.address %>/tls:/etc/hyperledger/fabric/peer/tls
       - ../fabric-config/crypto-config/peerOrganizations/<%= org.domain %>/users:/etc/hyperledger/fabric/peer/msp/users
       - ../fabric-config/config:/etc/hyperledger/fabric/config
-    networks:
-      - basic
 
   <%_ if(peer.db.type==="CouchDb") { _%>
   couchdb.<%= peer.name %>.<%= org.domain %>:
@@ -298,8 +279,6 @@ services:
       - COUCHDB_PASSWORD=<%= peer.name %>Password
     ports:
       - <%= peer.couchDbExposePort %>:5984
-    networks:
-      - basic
   <%_ } _%>
   <%_ }) _%>
 <%_ }) _%>
@@ -320,8 +299,6 @@ services:
       retries: 7
     volumes:
       - /var/lib/postgresql/data
-    networks:
-      - basic
 
   <%= global.tools.explorer.address %>:
     deploy:
@@ -349,6 +326,4 @@ services:
     depends_on:
       db.<%= global.tools.explorer.address %>:
         condition: service_healthy
-    networks:
-      - basic
   <%_ } _%>
