@@ -23,11 +23,6 @@ services:
     command: sh -c 'fabric-ca-server start -b ${<%= org.ca.caAdminNameVar %>}:${<%= org.ca.caAdminPassVar %>} -d'
     volumes:
       - ../fabric-config/crypto-config/peerOrganizations/<%= org.domain %>/ca/:/etc/hyperledger/fabric-ca-server/crypto
-    <%_ if (org.ca.db === "postgres") { _%>
-    depends_on:
-      db.<%= org.ca.address %>:
-        condition: service_healthy
-    <%_ } _%>
 
   <%_ if (org.ca.db === "postgres") { _%>
   db.<%= org.ca.address %>:
@@ -163,9 +158,6 @@ services:
       - ../fabric-config/crypto-config:/tmp/crypto
     ports:
       - "<%= org.tools.explorer.port %>:8080"
-    depends_on:
-      db.<%= org.tools.explorer.address %>:
-        condition: service_healthy
   <%_ } _%>
 
   <%_ org.ordererGroups.forEach(function(ordererGroup){ _%>
@@ -323,7 +315,4 @@ services:
       - ../fabric-config/crypto-config:/tmp/crypto
     ports:
       - "<%= global.tools.explorer.port %>:8080"
-    depends_on:
-      db.<%= global.tools.explorer.address %>:
-        condition: service_healthy
   <%_ } _%>
