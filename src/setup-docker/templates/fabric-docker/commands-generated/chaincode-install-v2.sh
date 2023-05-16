@@ -17,8 +17,6 @@ chaincodeBuild <% -%>
   "<%= chaincode.lang %>" <% -%>
   "$CHAINCODES_BASE_DIR/<%= chaincode.directory %>"
 chaincodePackage <% -%>
-  # "<%= chaincode.channel.composeNetworkName %>_<%= chaincode.instantiatingOrg.cli.address %>" <% -%>
-  # "<%= chaincode.channel.composeNetworkName %>_<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
   "${cli_container_id}" <% -%>
   "<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
   "<%= chaincode.name %>" <% -%>

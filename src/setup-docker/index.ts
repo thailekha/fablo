@@ -162,6 +162,11 @@ export default class SetupDockerGenerator extends Generator {
 
   _copyCommandsGeneratedScript(config: FabloConfigExtended): void {
     this.fs.copyTpl(
+      this.templatePath("fabric-docker/mod.sh"),
+      this.destinationPath("fabric-docker/mod.sh"),
+      config,
+    );
+    this.fs.copyTpl(
       this.templatePath("fabric-docker/channel-query-scripts.sh"),
       this.destinationPath("fabric-docker/channel-query-scripts.sh"),
       config,

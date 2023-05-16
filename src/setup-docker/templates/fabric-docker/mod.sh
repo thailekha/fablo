@@ -3,7 +3,6 @@
 get_container_id() {
   container_name=$1
   while ! docker ps -f "name=$container_name" -f "status=running" --format "{{.ID}}" | grep -q .; do
-    echo "Waiting for $container_name container to start..."
     sleep 1
   done
 
@@ -17,8 +16,6 @@ get_container_id() {
     echo "More than one container with the name '$container_name' found."
     exit 1
   else
-    cid=$(echo "$container_ids")
-    echo "Container ID: $cid"
-    return "$cid"
+    echo -n "$container_ids"
   fi
 }
