@@ -75,6 +75,7 @@ export interface ChannelConfig {
   ordererHead: OrdererConfig;
   orgs: OrgConfig[];
   instantiatingOrg: OrgConfig;
+  // composeNetworkName: string;
 }
 
 export interface PrivateCollectionConfig {
@@ -125,6 +126,7 @@ export interface OrgConfig {
   peersCount: number;
   ordererGroups: OrdererGroup[];
   tools: { fabloRest?: FabloRestConfig; explorer?: ExplorerConfig };
+  // composeNetworkName: string;
 }
 
 export interface ChaincodeConfig {

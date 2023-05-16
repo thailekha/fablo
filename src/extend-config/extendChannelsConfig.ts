@@ -2,6 +2,7 @@ import { ChannelConfig, OrdererGroup, OrgConfig } from "../types/FabloConfigExte
 import { ChannelJson } from "../types/FabloConfigJson";
 import * as _ from "lodash";
 import defaults from "./defaults";
+// import { composeNetworkName } from "../mod";
 
 const filterToAvailablePeers = (orgTransformedFormat: OrgConfig, peersTransformedFormat: string[]) => {
   const filteredPeers = orgTransformedFormat.peers.filter((p) => peersTransformedFormat.includes(p.name));
@@ -37,6 +38,7 @@ const extendChannelConfig = (
     ordererGroup,
     ordererHead,
     instantiatingOrg: orgsForChannel[0],
+    // composeNetworkName,
   };
 };
 

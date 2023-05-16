@@ -20,6 +20,7 @@ import {
   pairOrgWithChannels,
 } from "../types/ConnectionProfile";
 import { createExplorerConfig } from "../types/ExplorerConfig";
+import { composeNetworkName } from "../mod";
 
 const ValidateGeneratorPath = require.resolve("../validate");
 
@@ -41,12 +42,6 @@ export default class SetupDockerGenerator extends Generator {
     const json = parseFabloConfig(this.fs.read(fabloConfigPath));
     const config = extendConfig(json);
     const { global, orgs, chaincodes, channels } = config;
-
-    const dateString = new Date()
-      .toISOString()
-      .substring(0, 16)
-      .replace(/[^0-9]+/g, "");
-    const composeNetworkName = `fablo_network_${dateString}`;
 
     this.log(`Used network config: ${fabloConfigPath}`);
     this.log(`Fabric version is: ${global.fabricVersion}`);

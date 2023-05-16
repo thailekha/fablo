@@ -14,6 +14,7 @@ import {
 } from "../types/FabloConfigExtended";
 import _ = require("lodash");
 import { version } from "../repositoryUtils";
+// import { composeNetworkName } from "../mod";
 
 const extendCaConfig = (
   caJsonFormat: CAJson,
@@ -241,6 +242,7 @@ const extendOrgConfig = (
     headPeer: peers[0],
     ordererGroups,
     tools: { ...fabloRest, ...explorer },
+    // composeNetworkName,
   };
 };
 
