@@ -10,12 +10,12 @@
 
 printHeadline "Packaging chaincode '<%= chaincode.name %>'" "U1F60E"
 
-cli_container_id=$(get_container_id <%= chaincode.instantiatingOrg.cli.address %>)
-
 chaincodeBuild <% -%>
   "<%= chaincode.name %>" <% -%>
   "<%= chaincode.lang %>" <% -%>
   "$CHAINCODES_BASE_DIR/<%= chaincode.directory %>"
+
+cli_container_id=$(get_container_id <%= chaincode.instantiatingOrg.cli.address %>)
 chaincodePackage <% -%>
   "${cli_container_id}" <% -%>
   "<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
@@ -23,17 +23,18 @@ chaincodePackage <% -%>
   "$version" <% -%>
   "<%= chaincode.lang %>" <% -%>
 <% chaincode.channel.orgs.forEach((org) => { -%>
+  cli_container_id=$(get_container_id <%= org.cli.address %>)
   printHeadline "Installing '<%= chaincode.name %>' for <%= org.name %>" "U1F60E"
   <% org.peers.forEach((peer) => { -%>
     chaincodeInstall <% -%>
-      "<%= org.cli.address %>" <% -%>
+      "${cli_container_id}" <% -%>
       "<%= peer.fullAddress %>" <% -%>
       "<%= chaincode.name %>" <% -%>
       "$version" <% -%>
       "<%= !global.tls ? '' : `crypto-orderer/tlsca.${chaincode.channel.ordererHead.domain}-cert.pem` %>"
   <% }) -%>
   chaincodeApprove <% -%>
-    "<%= org.cli.address %>" <% -%>
+    "${cli_container_id}" <% -%>
     "<%= org.headPeer.fullAddress %>" <% -%>
     "<%= chaincode.channel.name %>" <% -%>
     "<%= chaincode.name %>" <% -%>
@@ -44,9 +45,11 @@ chaincodePackage <% -%>
     "<%= !global.tls ? '' : `crypto-orderer/tlsca.${chaincode.channel.ordererHead.domain}-cert.pem` %>" <% -%>
     "<%= chaincode.privateDataConfigFile || '' %>"
 <% }) -%>
+
 printItalics "Committing chaincode '<%= chaincode.name %>' on channel '<%= chaincode.channel.name %>' as '<%= chaincode.instantiatingOrg.name %>'" "U1F618"
+cli_container_id=$(get_container_id <%= chaincode.instantiatingOrg.cli.address %>)
 chaincodeCommit <% -%>
-  "<%= chaincode.instantiatingOrg.cli.address %>" <% -%>
+  "${cli_container_id}" <% -%>
   "<%= chaincode.instantiatingOrg.headPeer.fullAddress %>" <% -%>
   "<%= chaincode.channel.name %>" <% -%>
   "<%= chaincode.name %>" <% -%>

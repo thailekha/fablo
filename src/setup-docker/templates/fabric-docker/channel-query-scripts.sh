@@ -11,48 +11,50 @@ if [ "$#" -eq 1 ]; then
   printChannelsHelp
 <% orgs.forEach((org) => { org.peers.forEach((peer) => { %>
 elif [ "$1" = "list" ] && [ "$2" = "<%= org.name.toLowerCase(); %>" ] && [ "$3" = "<%= peer.name %>" ]; then
+  cli_container_id=$(get_container_id <%= org.cli.address %>)
   <% if(!global.tls) { %>
-    peerChannelList "<%= org.cli.address %>" "<%= peer.fullAddress %>"
+    peerChannelList "${cli_container_id}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelListTls "<%= org.cli.address %>" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= ordererGroups[0].ordererHeads[0].domain %>-cert.pem"
+    peerChannelListTls "${cli_container_id}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= ordererGroups[0].ordererHeads[0].domain %>-cert.pem"
   <% } %>
 <% })}) %>
 
 <% channels.forEach((channel) => { channel.orgs.forEach((org) => { org.peers.forEach((peer) => { %>
 elif [ "$1" = "getinfo" ] && [ "$2" = "<%= channel.name %>" ] && [ "$3" = "<%= org.name.toLowerCase(); %>" ] && [ "$4" = "<%= peer.name %>" ]; then
+  cli_container_id=$(get_container_id <%= org.cli.address %>)
   <% if(!global.tls) { %>
-    peerChannelGetInfo "<%= channel.name %>" "<%= org.cli.address %>" "<%= peer.fullAddress %>"
+    peerChannelGetInfo "<%= channel.name %>" "${cli_container_id}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelGetInfoTls "<%= channel.name %>" "<%= org.cli.address %>" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
+    peerChannelGetInfoTls "<%= channel.name %>" "${cli_container_id}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
   <% } %>
 elif [ "$1" = "fetch" ] && [ "$2" = "config" ] && [ "$3" = "<%= channel.name %>" ] && [ "$4" = "<%= org.name.toLowerCase(); %>" ] && [ "$5" = "<%= peer.name %>" ] && [ "$#" = 7 ]; then
   FILE_NAME=$6
   <% if(!global.tls) { %>
-    peerChannelFetchConfig "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>"
+    peerChannelFetchConfig "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelFetchConfigTls "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
+    peerChannelFetchConfigTls "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
   <% } %>
 elif [ "$1" = "fetch" ] && [ "$2" = "lastBlock" ] && [ "$3" = "<%= channel.name %>" ] && [ "$4" = "<%= org.name.toLowerCase(); %>" ] && [ "$5" = "<%= peer.name %>" ] && [ "$#" = 7 ]; then
   FILE_NAME=$6
   <% if(!global.tls) { %>
-    peerChannelFetchLastBlock "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>"
+    peerChannelFetchLastBlock "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelFetchLastBlockTls "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
+    peerChannelFetchLastBlockTls "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
   <% } %>
 elif [ "$1" = "fetch" ] && [ "$2" = "firstBlock" ] && [ "$3" = "<%= channel.name %>" ] && [ "$4" = "<%= org.name.toLowerCase(); %>" ] && [ "$5" = "<%= peer.name %>" ] && [ "$#" = 7 ]; then
   FILE_NAME=$6
   <% if(!global.tls) { %>
-    peerChannelFetchFirstBlock "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>"
+    peerChannelFetchFirstBlock "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelFetchFirstBlockTls "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
+    peerChannelFetchFirstBlockTls "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
   <% } %>
 elif [ "$1" = "fetch" ] && [ "$2" = "block" ] && [ "$3" = "<%= channel.name %>" ] && [ "$4" = "<%= org.name.toLowerCase(); %>" ] && [ "$5" = "<%= peer.name %>" ] && [ "$#" = 8 ]; then
   FILE_NAME=$6
   BLOCK_NUMBER=$7
   <% if(!global.tls) { %>
-    peerChannelFetchBlock "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "${BLOCK_NUMBER}" "<%= peer.fullAddress %>"
+    peerChannelFetchBlock "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "${BLOCK_NUMBER}" "<%= peer.fullAddress %>"
   <% } else { %>
-    peerChannelFetchBlockTls "<%= channel.name %>" "<%= org.cli.address %>" "${FILE_NAME}" "${BLOCK_NUMBER}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
+    peerChannelFetchBlockTls "<%= channel.name %>" "${cli_container_id}" "${FILE_NAME}" "${BLOCK_NUMBER}" "<%= peer.fullAddress %>" "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
   <% } %>
 <% })})}) %>
 else

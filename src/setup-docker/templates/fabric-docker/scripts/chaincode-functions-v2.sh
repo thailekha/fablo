@@ -154,6 +154,7 @@ chaincodeApprove() {
   SEQUENCE=$((SEQUENCE + 1))
   inputLog "SEQUENCE: $SEQUENCE"
 
+  echo -e "@\n@\n@\n@\n@\n@\n@\n@\n@\n123"
   docker exec -e CORE_PEER_ADDRESS="$PEER_ADDRESS" -e CC_PACKAGE_ID="$CC_PACKAGE_ID" "$CLI_NAME" peer lifecycle chaincode approveformyorg \
     -o "$ORDERER_URL" \
     -C "$CHANNEL_NAME" \
@@ -230,6 +231,7 @@ chaincodeCommit() {
   local QUERYCOMMITTED_RESPONSE
   local SEQUENCE
 
+  echo -e "@\n@\n@\n@\n@\n@\n@\n@\n@\n456"
   QUERYCOMMITTED_RESPONSE="$(
     docker exec -e CORE_PEER_ADDRESS="$PEER_ADDRESS" "$CLI_NAME" peer lifecycle chaincode querycommitted \
       --channelID "$CHANNEL_NAME" \

@@ -10,10 +10,11 @@ chaincodeBuild <% -%>
   "<%= chaincode.lang %>" <% -%>
   "$CHAINCODES_BASE_DIR/<%= chaincode.directory %>"
 <% chaincode.channel.orgs.forEach((org) => { -%>
+  cli_container_id=$(get_container_id <%= org.cli.address %>)
   <% org.peers.forEach((peer) => { -%>
     printHeadline "Installing '<%= chaincode.name %>' on <%= chaincode.channel.name %>/<%= org.name %>/<%= peer.name %>" "U1F60E"
     chaincodeInstall <% -%>
-      "<%= org.cli.address %>" <% -%>
+      "${cli_container_id}" <% -%>
       "<%= peer.fullAddress %>" <% -%>
       "<%= chaincode.channel.name %>" <% -%>
       "<%= chaincode.name %>" <% -%>

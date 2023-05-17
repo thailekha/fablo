@@ -46,7 +46,6 @@ installChannels() {
       <% channel.orgs.forEach((org, orgNo) => { -%>
         cli_container_id=$(get_container_id <%= org.cli.address %>)
 
-
         <% org.peers.forEach((peer, peerNo) => { -%>
           <% if(orgNo == 0 && peerNo == 0) { -%>
             printHeadline "Creating '<%= channel.name %>' on <%= org.name %>/<%= peer.name %>" "U1F63B"
@@ -109,18 +108,19 @@ notifyOrgsAboutChannels() {
   printHeadline "Notyfing orgs about channels" "U1F4E2"
   <% channels.forEach((channel) => { -%>
     <% channel.orgs.forEach((org) => { -%>
+      cli_container_id=$(get_container_id <%= org.cli.address %>)
      <% if(!global.tls) { -%>
        notifyOrgAboutNewChannel <% -%>
          "<%= channel.name %>" <% -%>
          "<%= org.mspName %>" <% -%>
-         "<%= org.cli.address %>" <% -%>
+         "${cli_container_id}" <% -%>
          "peer0.<%= org.domain %>" <% -%>
          "<%= channel.ordererHead.fullAddress %>"
      <% } else { -%>
        notifyOrgAboutNewChannelTls <% -%>
          "<%= channel.name %>" <% -%>
          "<%= org.mspName %>" <% -%>
-         "<%= org.cli.address %>" <% -%>
+         "${cli_container_id}" <% -%>
          "peer0.<%= org.domain %>" <% -%>
          "<%= channel.ordererHead.fullAddress %>" <% -%>
          "crypto-orderer/tlsca.<%= channel.ordererHead.domain %>-cert.pem"
@@ -131,7 +131,8 @@ notifyOrgsAboutChannels() {
   printHeadline "Deleting new channel config blocks" "U1F52A"
   <% channels.forEach((channel) => { -%>
     <% channel.orgs.forEach((org) => { -%>
-      deleteNewChannelUpdateTx "<%= channel.name %>" "<%= org.mspName %>" "<%= org.cli.address %>"
+      cli_container_id=$(get_container_id <%= org.cli.address %>)
+      deleteNewChannelUpdateTx "<%= channel.name %>" "<%= org.mspName %>" "${cli_container_id}"
     <% }) -%>
   <% }) -%>
 }
