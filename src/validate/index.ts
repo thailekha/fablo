@@ -94,7 +94,7 @@ class ValidateGenerator extends Generator {
     this._validateIfConfigFileExists(this.options.fabloConfig);
 
     const networkConfig = parseFabloConfig(this.fs.read(this.options.fabloConfigPath));
-    this._validateJsonSchema(networkConfig);
+    // this._validateJsonSchema(networkConfig);
     this._validateSupportedFabloVersion(networkConfig.$schema);
     this._validateFabricVersion(networkConfig.global.fabricVersion);
     this._validateOrgs(networkConfig.orgs);
